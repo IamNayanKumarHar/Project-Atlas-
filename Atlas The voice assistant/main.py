@@ -112,14 +112,16 @@ if __name__ == "__main__":
         except sr.UnknownValueError:
             print("Sorry your voice is noise or may you are away from the mic please speak clearly")
             speak("Sorry your voice is noise or may you are away from the mic please speak clearly")
+            continue
 
         except sr.RequestError as e:
             print("Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e))
             speak("Please check your internet connection..")
+            continue
 
         except KeyboardInterrupt:
             pass
-
+            continue
 
 
     
