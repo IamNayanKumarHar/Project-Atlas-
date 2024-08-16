@@ -16,6 +16,8 @@ flipkart = "https://www.flipkart.com"
 
 # song library
 
+deva = "https://www.youtube.com/watch?v=mNuhKUOD_A0"
+malang = "https://www.youtube.com/watch?v=UbMgcdmYC70"
 grateful = "https://www.youtube.com/watch?v=83RUhxsfLWs"
 careless = "https://www.youtube.com/watch?v=Z6L4u2i97Rw&list=RD83RUhxsfLWs&index=2"
 summer = "https://www.youtube.com/watch?v=KxwUy2S2n-Q"
@@ -51,8 +53,10 @@ def url_opener(instructions):
             webbrowser.open(globals()[song])
         else:
             print(f"{song} not found.")
-
-        
+    
+    elif instructions.lower().endswith("on spotify") and instructions.lower().startswith("play"):
+        music = instructions.lower().split(" ")[1]
+        webbrowser.open(f"https://open.spotify.com/search/{instructions}")
 
 def play(filename):
     pygame.mixer.init(frequency=16000)
