@@ -3,8 +3,44 @@ import speech_recognition as sr
 import pyaudio
 import webbrowser
 import pygame
+import requests
 
-assistant = "atlas"
+assistant = "Atlas"
+
+api_key_news = "d92bcc710b15477baa4f3232ee841d0f"
+api_key_weather = "0915469b30f24ba385e94008241608"
+
+def get_weather(api_key, location):
+    base_url = "http://api.weatherapi.com/v1/current.json"
+    params = {
+        'key': api_key,
+        'q': location
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        location_name = data['location']['name']
+        country = data['location']['country']
+        temp_c = data['current']['temp_c']
+        condition = data['current']['condition']['text']
+        humidity = data['current']['humidity']
+        wind_kph = data['current']['wind_kph']
+
+        print(f"Weather in {location_name}, {country}:")
+        print(f"Temperature: {temp_c}°C")
+        speak(f"Temperature: {temp_c}°C")
+        print(f"Condition: {condition}")
+        speak(f"Condition: {condition}")
+        print(f"Humidity: {humidity}%")
+        speak(f"Humidity: {humidity}%")
+        print(f"Wind Speed: {wind_kph} km/h")
+        speak(f"Wind Speed: {wind_kph} km/h")
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
 
 def palying_music(path):
     pygame.mixer.init()
@@ -18,18 +54,25 @@ def speak(speech):
     engine.say(speech)
     engine.runAndWait()
 
-def url_opener(instructions):
+def url_opener(instructions): 
     if instructions.lower().startswith("open"):
         web = instructions.lower().split(" ")[1]
         webbrowser.open(f"https://www.{web}.com")
 
     elif instructions.lower().startswith("play") and instructions.lower().endswith("on youtube"):  
-        video = instructions.lower().split(" ")[1]
+        list_for_youtube = instructions.lower().split(" ")
+        video = list_for_youtube[1:-2]
         webbrowser.open(f"https://www.youtube.com/results?search_query={video}")    
         
     elif instructions.lower().startswith("play") and instructions.lower().endswith("on spotify"):  
-        music = instructions.lower().split(" ")[1]
+        list_for_spotify = instructions.lower().split(" ")
+        music = list_for_spotify[1:-2]
         webbrowser.open(f"https://open.spotify.com/search/{music}")
+
+    elif instructions.lower().startswith("weather"):
+        list_for_weather = instructions.lower().split(" ")
+        location = list_for_weather[-1]
+        get_weather(api_key_weather, location)   
 
 def play(filename):
     pygame.mixer.init(frequency=16000)
@@ -42,6 +85,7 @@ def taking_voice_to_wake_assistant():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
+        # play('Atlas The voice assistant/music/level-up-191997.mp3')
         r.dynamic_energy_threshold = True
         r.energy_threshold = 300
         audio = r.listen(source, phrase_time_limit=5)
@@ -53,6 +97,7 @@ def taking_voice_to_get_instructions():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
+        play('Atlas The voice assistant/music/notification-beep-229154.mp3')
         r.dynamic_energy_threshold = True
         r.energy_threshold = 300
         audio = r.listen(source)
@@ -70,14 +115,12 @@ if __name__ == "__main__":
     speak(f" Activating {assistant}...")
     while True:
         try:
-            play('Atlas The voice assistant/music/level-up-191997.mp3')
             wake_word = taking_voice_to_wake_assistant()
     
-            if wake_word.lower() == f"hello {assistant}" or wake_word.lower() == f"hey {assistant}":
+            if wake_word.lower() == f"hello {assistant.lower()}" or wake_word.lower() == f"hey {assistant.lower()}":
                 play('Atlas The voice assistant/music/level-up-191997.mp3')
-                print(f"Hello, I am {assistant}. How may I help you?")
+                speak("Yes")
 
-                play('Atlas The voice assistant/music/notification-beep-229154.mp3')
                 instructions = taking_voice_to_get_instructions()
                 url_opener(instructions)
 
