@@ -40,12 +40,17 @@ def url_opener(instructions):
         webbrowser.open(youtube)
     elif instructions.lower().startswith("open"):
         web = instructions.lower().split(" ")[1]
-        webbrowser.open(web)
+        if web in globals():
+            webbrowser.open(globals()[web])
+        else:
+            print(f"{web} not found.")
 
     elif instructions.lower().startswith("play"):
         song = instructions.lower().split(" ")[1] 
-        if song == "summer":
-            webbrowser.open(summer)
+        if song in globals():
+            webbrowser.open(globals()[song])
+        else:
+            print(f"{song} not found.")
 
         
 
