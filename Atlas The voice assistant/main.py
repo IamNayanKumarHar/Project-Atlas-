@@ -10,6 +10,48 @@ assistant = "Atlas"
 api_key_news = "d92bcc710b15477baa4f3232ee841d0f"
 api_key_weather = "0915469b30f24ba385e94008241608"
 
+def get_news_headlines(api_key, country):
+    base_url = "https://newsapi.org/v2/top-headlines"
+    
+    params = {
+        'apiKey': api_key,
+        'pageSize': 3  # Adjust the number of headlines as needed
+    }
+    
+    if country:
+        params['country'] = country
+
+    try:
+        print("Sending request to News API...")
+        response = requests.get(base_url, params=params)
+        print(f"Response status code: {response.status_code}")
+        
+        response.raise_for_status()
+        news_data = response.json()
+
+        print(f"API Response: {news_data}")
+
+        if news_data['status'] == 'ok':
+            articles = news_data.get('articles', [])
+            if articles:
+                print(f"Number of articles received: {len(articles)}")
+                for i, article in enumerate(articles, 1):
+                    headline = article.get('title', 'No headline available')
+                    print(f"{i}. {headline}")
+            else:
+                print("No articles found in the response.")
+        else:
+            print(f"API returned an error. Status: {news_data.get('status')}")
+            if 'message' in news_data:
+                print(f"Error message: {news_data['message']}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while making the request: {e}")
+    except ValueError as e:
+        print(f"An error occurred while parsing the JSON response: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
 def get_weather(api_key, location):
     base_url = "http://api.weatherapi.com/v1/current.json"
     params = {
@@ -69,10 +111,14 @@ def url_opener(instructions):
         music = list_for_spotify[1:-2]
         webbrowser.open(f"https://open.spotify.com/search/{music}")
 
-    elif instructions.lower().startswith("weather"):
+    elif "weather" in instructions.lower():
         list_for_weather = instructions.lower().split(" ")
         location = list_for_weather[-1]
         get_weather(api_key_weather, location)   
+
+    elif "news" in instructions.lower():
+        get_news_headlines(api_key_news, "us")
+
 
 def play(filename):
     pygame.mixer.init(frequency=16000)
