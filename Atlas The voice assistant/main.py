@@ -4,11 +4,17 @@ import pyaudio
 import webbrowser
 import pygame
 import requests
+import wikipedia
 
 assistant = "Atlas"
 
 api_key_news = "d92bcc710b15477baa4f3232ee841d0f"
 api_key_weather = "0915469b30f24ba385e94008241608"
+
+def wikipedia_search(input):
+    output = (wikipedia.summary(input, sentences=4))
+    print(output)
+    speak(output)
 
 def get_news_headlines(api_key, country):
     base_url = "https://newsapi.org/v2/top-headlines"
@@ -38,6 +44,7 @@ def get_news_headlines(api_key, country):
                 for i, article in enumerate(articles, 1):
                     headline = article.get('title', 'No headline available')
                     print(f"{i}. {headline}")
+                    speak(f"{i}. {headline}")
             else:
                 print("No articles found in the response.")
         else:
@@ -55,7 +62,7 @@ def get_news_headlines(api_key, country):
 def get_weather(api_key, location):
     base_url = "http://api.weatherapi.com/v1/current.json"
     params = {
-        'key': api_key,
+        'key': api_key, 
         'q': location
     }
 
@@ -118,6 +125,12 @@ def url_opener(instructions):
 
     elif "news" in instructions.lower():
         get_news_headlines(api_key_news, "us")
+
+    elif "tell me about" in instructions.lower():
+        list_for_wikipedia = instructions.lower().split(" ")
+        demo = list_for_wikipedia[3:]
+        search = " ".join(demo)
+        wikipedia_search(search)
 
 
 def play(filename):
