@@ -6,7 +6,7 @@ import pygame
 import requests
 import wikipedia
 
-assistant = "Atlas"
+assistant = "atlas"
 
 api_key_news = "d92bcc710b15477baa4f3232ee841d0f"
 api_key_weather = "0915469b30f24ba385e94008241608"
@@ -130,8 +130,25 @@ def url_opener(instructions):
         list_for_wikipedia = instructions.lower().split(" ")
         demo = list_for_wikipedia[3:]
         search = " ".join(demo)
-        wikipedia_search(search)
+        try:
+            wikipedia_search(search)
+        except:
+            query = search
+            search_results = search(query, num_results=1)
+            first_result = next(search_results, None)
+            if first_result:   
+                webbrowser.open(first_result)
+            else:
+                print("No results found")
 
+    else:
+        query = instructions.lower()
+        search_results = search(query, num_results=1)
+        first_result = next(search_results, None)
+        if first_result:   
+            webbrowser.open(first_result)
+        else:
+            print("No results found")
 
 def play(filename):
     pygame.mixer.init(frequency=16000)
@@ -156,7 +173,7 @@ def taking_voice_to_get_instructions():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        play('Atlas The voice assistant/music/notification-beep-229154.mp3')
+        # play('Atlas The voice assistant/music/notification-beep-229154.mp3')
         r.dynamic_energy_threshold = True
         r.energy_threshold = 300
         audio = r.listen(source)
@@ -176,7 +193,7 @@ if __name__ == "__main__":
         try:
             wake_word = taking_voice_to_wake_assistant()
     
-            if wake_word.lower() == f"hello {assistant.lower()}" or wake_word.lower() == f"hey {assistant.lower()}":
+            if wake_word.lower() == f"hello {assistant.lower()}":
                 play('Atlas The voice assistant/music/level-up-191997.mp3')
                 speak("Yes")
 
@@ -184,6 +201,7 @@ if __name__ == "__main__":
                 url_opener(instructions)
 
         except Exception as e:
+            play('N:\Coding\Project-Atlas\Atlas The voice assistant\music\error-call-to-attention-129258.mp3')
             pass
             continue
 
