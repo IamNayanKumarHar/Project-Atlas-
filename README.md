@@ -12,10 +12,11 @@ Atlas is a powerful and versatile voice assistant built in Python. It can perfor
 - 📰 Latest news headlines
 - ☀️ Real-time weather updates
 - 🔊 Text-to-speech functionality
+- 🌐 Searches from wikipedia
 
 ## 🛠️ Technologies Used
 
-- Python 3.x
+- Python 3
 - pyttsx3 for text-to-speech
 - SpeechRecognition for voice recognition
 - PyAudio for audio processing
@@ -26,7 +27,7 @@ Atlas is a powerful and versatile voice assistant built in Python. It can perfor
 
 Before you begin, ensure you have met the following requirements:
 
-- Python 3.x installed
+- Python 3 installed
 - pip package manager
 - API keys for News API and WeatherAPI
 
@@ -49,11 +50,28 @@ Before you begin, ensure you have met the following requirements:
 
 ## 🗣️ Voice Commands
 
-- "Open [website]" - Opens the specified website
-- "Play [song] on YouTube" - Searches and plays the song on YouTube
-- "Play [song] on Spotify" - Searches and plays the song on Spotify
-- "Weather in [city]" - Provides weather information for the specified city
-- "News" - Fetches the latest news headlines
+1. **Web Browsing**
+    "Open [website]"
+     Example: "Open google"
+
+2. **YouTube Search**
+    "Play [video name] on YouTube"
+     Example: "Play despacito on YouTube"
+
+3. **Spotify Search**
+    "Play [song or artist name] on Spotify"
+     Example: "Play Ed Sheeran on Spotify"
+
+4. **Weather Information**
+    "weather at [location]"
+     Example: "weather at New York"
+
+5. **News Headlines**
+    "Get news" or "Tell me the news"
+
+6. **Wikipedia Search**
+    "Tell me about [topic]"
+     Example: "Tell me about artificial intelligence"
 
 ## 🤝 Contributing
 
