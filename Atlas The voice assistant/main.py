@@ -111,12 +111,14 @@ def url_opener(instructions):
     elif instructions.lower().startswith("play") and instructions.lower().endswith("on youtube"):  
         list_for_youtube = instructions.lower().split(" ")
         video = list_for_youtube[1:-2]
-        webbrowser.open(f"https://www.youtube.com/results?search_query={video}")    
+        youtube_search = " ".join(video)
+        webbrowser.open(f"https://www.youtube.com/results?search_query={youtube_search}")    
         
     elif instructions.lower().startswith("play") and instructions.lower().endswith("on spotify"):  
         list_for_spotify = instructions.lower().split(" ")
         music = list_for_spotify[1:-2]
-        webbrowser.open(f"https://open.spotify.com/search/{music}")
+        spotify_search = " ".join(music)
+        webbrowser.open(f"https://open.spotify.com/search/{spotify_search}")
 
     elif "weather" in instructions.lower():
         list_for_weather = instructions.lower().split(" ")
